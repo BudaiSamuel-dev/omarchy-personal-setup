@@ -1,7 +1,40 @@
-# dotfiles
+# Omarchy Personal Setup
 
-Personal config, Omarchy shell plugins, and themes, kept in sync across
-machines via symlinks + a small install script.
+This is my personal [Omarchy](https://omarchy.org/) dotfiles repo: Hyprland
+config, terminal configs, Neovim, and the shell plugins/themes I've installed
+on top of a stock Omarchy install. Everything here is symlinked into
+`~/.config` on my machine, so editing a config normally edits the file in
+this repo — there's no separate export step, just `git commit` when I want a
+snapshot. Cloning this repo onto a fresh Omarchy install and running
+`install.sh` restores the whole setup, plugins and themes included.
+
+## Install guide
+
+On a fresh Omarchy install:
+
+```bash
+git clone https://github.com/BudaiSamuel-dev/omarchy-personal-setup.git ~/dotfiles
+~/dotfiles/install.sh
+```
+
+`install.sh` will:
+1. Symlink every tracked config file into place under `~/.config` (backing
+   up anything already there instead of overwriting it).
+2. Re-clone every plugin listed in `MANIFEST.plugins` via `omarchy plugin
+   clone`.
+3. Re-clone every theme listed in `MANIFEST.themes` via `omarchy theme
+   install`.
+
+Then apply the changes:
+
+```bash
+omarchy restart shell
+omarchy restart terminal
+hyprctl reload
+```
+
+The script is idempotent — re-running it later (e.g. after adding a new
+plugin/theme to the manifests) only fills in what's missing.
 
 ## What's tracked
 
@@ -30,19 +63,6 @@ git add -A
 git commit -m "describe the change"
 git push
 ```
-
-## Fresh machine setup
-
-```bash
-git clone git@github.com:<you>/dotfiles.git ~/dotfiles
-~/dotfiles/install.sh
-omarchy restart shell
-omarchy restart terminal
-hyprctl reload
-```
-
-`install.sh` is idempotent — safe to re-run any time (e.g. after adding a
-new plugin/theme to the manifests).
 
 ## Adding a new plugin or theme later
 
