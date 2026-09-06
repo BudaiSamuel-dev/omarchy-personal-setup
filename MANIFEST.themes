@@ -1,0 +1,7 @@
+# <theme-slug> <git-url>
+# Add a line here after `omarchy theme install <url>` to track a new theme.
+awakening https://github.com/OldJobobo/omarchy-awakening-theme.git
+batman https://github.com/OldJobobo/omarchy-batman-theme.git
+florida-man https://github.com/OldJobobo/omarchy-florida-man-theme
+greek-noir https://github.com/HANCORE-linux/omarchy-greek-noir-theme.git
+mechanoonna https://github.com/HANCORE-linux/omarchy-mechanoonna-theme.git

@@ -1,0 +1,39 @@
+#!/bin/bash
+# Bring a new, not-yet-tracked config file/dir under dotfiles management.
+#
+# Usage: dotfiles-add ~/.config/some-app/config.toml
+set -euo pipefail
+
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if [ $# -ne 1 ]; then
+  echo "Usage: dotfiles-add <path under \$HOME>" >&2
+  exit 1
+fi
+
+home_path="$(readlink -f "$1")"
+if [ ! -e "$home_path" ]; then
+  echo "error: $home_path does not exist" >&2
+  exit 1
+fi
+if [ -L "$1" ]; then
+  echo "error: $1 is already a symlink (already tracked?)" >&2
+  exit 1
+fi
+
+case "$home_path" in
+  "$HOME"/*) rel="${home_path#"$HOME"/}" ;;
+  *) echo "error: path must be under \$HOME" >&2; exit 1 ;;
+esac
+
+repo_path="$DOTFILES_DIR/$rel"
+mkdir -p "$(dirname "$repo_path")"
+mv "$home_path" "$repo_path"
+ln -s "$repo_path" "$home_path"
+
+echo "moved $rel into $DOTFILES_DIR and symlinked it back."
+echo
+echo "Now add this pair to install.sh's FILES array so future installs pick it up:"
+echo "  \"$rel:$rel\""
+echo
+echo "Then: cd \"$DOTFILES_DIR\" && git add -A \"$rel\" install.sh && git commit"
