@@ -1,0 +1,20 @@
+-- Compositor-level defence-in-depth for Gaming Mode: keeps idle inhibited
+-- even if omarchy-shell (the plugin doing the actual detection) is dead or
+-- slow to react.
+--
+-- Steam launches every game, native or Proton, as class steam_app_<appid>
+-- (verified live: steam_app_2231380 for a Proton title -- see
+-- default/hypr/apps/battlenet.lua for the same observation). Hyprland
+-- matches windowrule `class` as a full match, so Omarchy's own
+-- `o.window("steam", { idle_inhibit = "fullscreen" })` in
+-- default/hypr/apps/steam.lua only ever covers the Steam client window
+-- itself, never an actual game window -- this rule is what was missing.
+--
+-- "always", not "fullscreen": a genuinely fullscreen Proton game was
+-- observed reporting fullscreen=0 (borderless), and controller-only input
+-- doesn't reset the Wayland idle timer at all, so a fullscreen-gated rule
+-- would still miss real sessions.
+--
+-- Keep this class list in sync with the budaisamuel.gaming-mode plugin's
+-- GamingModeModel.js defaultPatterns().
+o.window("^steam_app_[0-9]+$", { idle_inhibit = "always" })

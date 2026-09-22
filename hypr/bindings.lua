@@ -28,3 +28,4 @@
 -- o.bind("SUPER + H", nil, "voxtype record toggle")
 -- o.bind("SUPER + PERIOD", nil, "omarchy-shell shell toggle omarchy.emojis")
 o.bind("SUPER + CTRL + G", "Git dashboard", "omarchy-shell dev.git toggle")
+o.bind("SUPER + CTRL + SHIFT + G", "Gaming mode", "omarchy-toggle-gaming-mode toggle")

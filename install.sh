@@ -18,6 +18,7 @@ FILES=(
   "hypr/hyprland.lua:.config/hypr/hyprland.lua"
   "hypr/input.lua:.config/hypr/input.lua"
   "hypr/autostart.lua:.config/hypr/autostart.lua"
+  "hypr/gaming.lua:.config/hypr/gaming.lua"
   "hypr/hyprsunset.conf:.config/hypr/hyprsunset.conf"
   "hypr/xdph.conf:.config/hypr/xdph.conf"
   "hypr/.luarc.json:.config/hypr/.luarc.json"
@@ -38,6 +39,7 @@ FILES=(
   "omarchy/hooks/post-update.d/setup-fingerprint.hook:.config/omarchy/hooks/post-update.d/setup-fingerprint.hook"
   "omarchy/lock-designs/Poster.qml:.config/omarchy/lock-designs/Poster.qml"
   "omarchy/defaults/agent:.config/omarchy/defaults/agent"
+  "bin/omarchy-toggle-gaming-mode:.local/bin/omarchy-toggle-gaming-mode"
 )
 
 link_one() {

@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# omarchy:summary=Toggle Gaming Mode: stay awake, silence notifications, disable animations
+# omarchy:args=[status|on|off|toggle|auto|apply-on|apply-off]
+# omarchy:examples=omarchy-toggle-gaming-mode status | omarchy-toggle-gaming-mode toggle
+
+set -uo pipefail
+
+STATE_DIR="$HOME/.local/state/omarchy"
+OWN_DIR="$STATE_DIR/gaming-mode"
+STAY_AWAKE_FILE="$STATE_DIR/indicators/stay-awake"
+HYPR_FLAG="$STATE_DIR/toggles/hypr/gaming-mode.lua"
+TOKEN="gaming-mode:$$:$RANDOM:$RANDOM"
+
+# apply-on/apply-off use the same ownership-token idiom as
+# omarchy-update-stay-awake: only force what wasn't already set, remember
+# that we're the one who set it, and only ever revert what we still own.
+# That way a Stay Awake or DND the user already had on manually survives a
+# gaming session untouched.
+
+apply_on() {
+  mkdir -p "$OWN_DIR" "$STATE_DIR/indicators" "$STATE_DIR/toggles/hypr"
+
+  if [[ ! -f $STAY_AWAKE_FILE ]]; then
+    printf '%s\n' "$TOKEN" >"$STAY_AWAKE_FILE"
+    printf '%s\n' "$TOKEN" >"$OWN_DIR/owns-stay-awake"
+  fi
+
+  if [[ $(omarchy-shell notifications isDnd 2>/dev/null) != "on" ]]; then
+    omarchy-shell notifications setDnd on >/dev/null 2>&1
+    : >"$OWN_DIR/owns-dnd"
+  fi
+
+  printf '%s\n' 'hl.config({ animations = { enabled = false } })' >"$HYPR_FLAG"
+  # Omarchy's Lua config makes this a non-legacy parser: `hyprctl keyword`
+  # refuses to touch it ("keyword can't work with non-legacy parsers"),
+  # so apply immediately the same way omarchy-screensaver does, with the
+  # legacy keyword as a fallback for a plain (non-Lua) Hyprland config.
+  hyprctl eval 'hl.config({ animations = { enabled = false } })' >/dev/null 2>&1 ||
+    hyprctl keyword animations:enabled 0 >/dev/null 2>&1 || true
+}
+
+apply_off() {
+  if [[ -f "$OWN_DIR/owns-stay-awake" ]]; then
+    owned_token=$(<"$OWN_DIR/owns-stay-awake")
+    if [[ -f $STAY_AWAKE_FILE && $(<"$STAY_AWAKE_FILE") == "$owned_token" ]]; then
+      rm -f "$STAY_AWAKE_FILE"
+    fi
+    rm -f "$OWN_DIR/owns-stay-awake"
+  fi
+
+  if [[ -f "$OWN_DIR/owns-dnd" ]]; then
+    omarchy-shell notifications setDnd off >/dev/null 2>&1
+    rm -f "$OWN_DIR/owns-dnd"
+  fi
+
+  if [[ -f $HYPR_FLAG ]]; then
+    rm -f "$HYPR_FLAG"
+    hyprctl reload >/dev/null 2>&1 || true
+  fi
+}
+
+case "${1:-status}" in
+  apply-on)
+    apply_on
+    ;;
+  apply-off)
+    apply_off
+    ;;
+  status | on | off | toggle | auto)
+    omarchy-shell budaisamuel.gaming-mode "$1"
+    ;;
+  *)
+    echo "Usage: omarchy-toggle-gaming-mode [status|on|off|toggle|auto|apply-on|apply-off]" >&2
+    exit 1
+    ;;
+esac
