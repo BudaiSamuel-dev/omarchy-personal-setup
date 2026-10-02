@@ -87,8 +87,14 @@ if [ -f "$DOTFILES_DIR/MANIFEST.plugins" ]; then
     if [ -d "$HOME/.config/omarchy/plugins/$id" ]; then
       echo "ok:       plugin $id already present"
     else
-      echo "cloning:  plugin $id from $url"
-      omarchy plugin clone "$url"
+      # `omarchy plugin clone` only copies built-in plugins; git URLs go through
+      # `plugin add`. Its last step rescans the running shell, which fails when
+      # installing from a TTY; the plugin is already in place by then, and the
+      # tracked shell.json enables it on the next `omarchy restart shell`.
+      echo "adding:   plugin $id from $url"
+      omarchy plugin add "$url" --yes </dev/null ||
+        [ -d "$HOME/.config/omarchy/plugins/$id" ] ||
+        echo "warning:  could not add plugin $id"
     fi
   done < "$DOTFILES_DIR/MANIFEST.plugins"
 fi

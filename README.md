@@ -21,7 +21,7 @@ git clone https://github.com/BudaiSamuel-dev/omarchy-personal-setup.git ~/dotfil
 1. Symlink every tracked config file into place under `~/.config` (backing
    up anything already there instead of overwriting it).
 2. Re-clone every plugin listed in `MANIFEST.plugins` via `omarchy plugin
-   clone`.
+   add`.
 3. Re-clone every theme listed in `MANIFEST.themes` via `omarchy theme
    install`.
 
@@ -51,6 +51,25 @@ Not tracked: `~/.local/state/omarchy` (runtime state), `~/.cache/omarchy`
 (regenerable caches), and anything under `~/.config/omarchy/plugins` or
 `~/.config/omarchy/themes` directly (see MANIFEST files instead).
 
+## My own plugins
+
+Two of the plugins in `MANIFEST.plugins` are mine, and this repo carries the
+config that wires them in:
+
+- **[Gaming Mode](https://github.com/BudaiSamuel-dev/omarchy-gaming-mode)**:
+  a bar icon that detects a running game and keeps the screen awake, silences
+  notifications and turns off animations while it runs. `SUPER+CTRL+SHIFT+G`
+  toggles it by hand. Wiring: `hypr/gaming.lua` (compositor-level idle
+  inhibit), `bin/omarchy-toggle-gaming-mode`, and the keybinding in
+  `hypr/bindings.lua`.
+- **[Monitor Workspaces](https://github.com/BudaiSamuel-dev/omarchy-monitor-workspaces)**:
+  every monitor gets its own workspaces 1–0. `SUPER+N` goes to the primary
+  (external) monitor's workspace N, `SUPER+RightAlt+N` to the laptop's, and
+  adding `SHIFT` moves the active window there. Each screen's bar shows only
+  its own workspaces. Wiring: the loader at the end of `hypr/hyprland.lua`,
+  `lv3:ralt_switch` in `hypr/input.lua` (makes Right Alt usable as a
+  modifier), and the widget's entry in `omarchy/shell.json`.
+
 ## How it works
 
 Each tracked file lives in this repo and is symlinked into place in
@@ -66,7 +85,7 @@ git push
 
 ## Adding a new plugin or theme later
 
-After `omarchy plugin clone <url>` or `omarchy theme install <url>`, add a
+After `omarchy plugin add <url>` or `omarchy theme install <url>`, add a
 line to `MANIFEST.plugins` or `MANIFEST.themes`:
 
 ```

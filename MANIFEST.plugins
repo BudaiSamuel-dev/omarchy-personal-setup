@@ -1,7 +1,8 @@
 # <plugin-id> <git-url>
-# Add a line here after `omarchy plugin clone <url>` to track a new plugin.
+# Add a line here after `omarchy plugin add <url>` to track a new plugin.
 aweiward.omaqbt https://github.com/Aweiward/omaqbt.git
 budaisamuel.gaming-mode https://github.com/BudaiSamuel-dev/omarchy-gaming-mode.git
+budaisamuel.workspaces https://github.com/BudaiSamuel-dev/omarchy-monitor-workspaces.git
 dev.git https://github.com/ariadev/omarchy-dev-git.git
 io.github.juancasanueva.plugin-manager https://github.com/juancasanueva/omarchy-plugin-manager.git
 io.github.r-witz.nothing-ear https://github.com/r-witz/omarchy-nothing-ear.git

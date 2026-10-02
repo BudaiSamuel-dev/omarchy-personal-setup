@@ -23,6 +23,10 @@ require("hypr.looknfeel")
 require("hypr.autostart")
 require("hypr.gaming")
 
+-- Per-monitor workspaces from the budaisamuel.workspaces plugin (MANIFEST.plugins).
+local monitor_workspaces = os.getenv("HOME") .. "/.config/omarchy/plugins/budaisamuel.workspaces/hypr/workspaces.lua"
+if io.open(monitor_workspaces) then dofile(monitor_workspaces) end
+
 -- Toggle config flags dynamically.
 require("default.hypr.toggles")
 

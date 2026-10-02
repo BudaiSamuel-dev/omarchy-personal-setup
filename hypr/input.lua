@@ -58,6 +58,6 @@
 hl.config({
   input = {
     kb_layout = "us,hu",
-    kb_options = "grp:alt_shift_toggle,compose:caps",
+    kb_options = "grp:alt_shift_toggle,compose:caps,lv3:ralt_switch",
   },
 })
